@@ -37,6 +37,17 @@ FATFS FatFs;
 /* File handler to perform R/W ops */
 FIL file_handler;
 
+typedef struct{
+	FRESULT mountStatus;
+	FRESULT openStatus;
+	FRESULT createStatus;
+	FRESULT writeStatus;
+	FRESULT readStatus;
+	FRESULT closeStatus;
+}ResultInfo;
+
+ResultInfo status;
+
 void FATFS_Init(void);
 char* FATFS_GetLabel();
 char* FATFS_GetLogicalPath();
@@ -48,6 +59,14 @@ char* FATFS_GetLogicalPath();
  * size: size read
  */
 FRESULT FATFS_CharReadFromFile(char* path, char* namefile, char* buffer_rx,int* size);
+
+/* Read a sequence of byte from file
+ * path: The Volume id (0: or others)
+ * namefile: File Name and it's extension
+ * buffer_rx: A 8-bit buffer for the management of the result
+ * size: size read
+ */
+FRESULT FATFS_ByteReadFromFile(char* path, char* namefile, uint8_t* buffer_rx,int* size);
 
 /* Read a string from file
  * path: The Volume id (0: or others)
