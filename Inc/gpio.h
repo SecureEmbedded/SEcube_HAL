@@ -5,6 +5,12 @@
 #include "stm32f4xx_hal.h"
 #include "mcu_ports.h"
 
+typedef uint16_t PINADDR;
+
+typedef GPIO_PinState PINSTATE;
+#define SETTED				GPIO_PIN_SET
+#define RESETTED			GPIO_PIN_RESET
+
 /* Pins */
 #define PIN0 GPIO_PIN_0
 #define PIN1 GPIO_PIN_1
@@ -45,10 +51,10 @@
 #define  GPIO_MODE_EVT_RISING_FALLING */
 
 /* SPEED */
-#define LOW		 GPIO_SPEED_LOW
-#define MEDIUM	 GPIO_SPEED_MEDIUM
-#define FAST	 GPIO_SPEED_FAST
-#define MAXSPEED GPIO_SPEED_HIGH
+#define LOW_SPEED		GPIO_SPEED_LOW
+#define MEDIUM	 		GPIO_SPEED_MEDIUM
+#define FAST	 		GPIO_SPEED_FAST
+#define MAXSPEED 		GPIO_SPEED_HIGH
 
 /* PULL TYPES */
 #define  NOPULL 	GPIO_NOPULL
@@ -56,7 +62,8 @@
 #define  PULLDOWN	GPIO_PULLDOWN
 
 typedef struct{
-    uint16_t Pin;
+	GPIO_TypeDef * GPIO;
+    uint16_t Pins;
     uint32_t Mode;
     uint32_t Pull;
     uint32_t Speed;
@@ -72,6 +79,10 @@ typedef struct{
 }GPIO_AF_Config;
 
 void MX_GPIO_Init(void);
+
+void GPIO_Init(GPIO_SimpleConfig config);
 void AF_GPIO_Init(GPIO_AF_Config);
+
+void GPIO_Write_Pin(GPIO_TypeDef* gpio, uint32_t pins, PINSTATE value);
 
 #endif /*__ pinoutConfig_H */

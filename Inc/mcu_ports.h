@@ -8,6 +8,9 @@
 #ifndef MCU_PORTS_H_
 #define MCU_PORTS_H_
 
+#include "stm32f4xx.h"
+#include "stm32f4xx_hal.h"
+
 /* FPGA JTAG PROTOCOL PINS */
 #define FPGA_TCK_Pin GPIO_PIN_4
 #define FPGA_TCK_GPIO_Port GPIOE

@@ -120,6 +120,41 @@ void MX_GPIO_Init(void)
 
 }
 
+void GPIO_Init(GPIO_SimpleConfig config){
+	GPIO_InitTypeDef GPIO_InitStruct;
+
+	if(config.GPIO == GPIOA){
+		  __GPIOA_CLK_ENABLE();
+	}else if(config.GPIO == GPIOB){
+		  __GPIOB_CLK_ENABLE();
+
+	}else if(config.GPIO == GPIOC){
+		  __GPIOC_CLK_ENABLE();
+
+	}else if(config.GPIO == GPIOD){
+		  __GPIOD_CLK_ENABLE();
+
+	}else if(config.GPIO == GPIOE){
+		  __GPIOE_CLK_ENABLE();
+
+	}else if(config.GPIO == GPIOF){
+		  __GPIOF_CLK_ENABLE();
+
+	}else if(config.GPIO == GPIOG){
+		  __GPIOG_CLK_ENABLE();
+
+	}else if(config.GPIO == GPIOH){
+		  __GPIOH_CLK_ENABLE();
+
+	}
+
+	GPIO_InitStruct.Pin = config.Pins;
+	GPIO_InitStruct.Mode = config.Mode;
+	GPIO_InitStruct.Pull = config.Pull;
+	GPIO_InitStruct.Speed = config.Speed;
+	HAL_GPIO_Init(config.GPIO, &GPIO_InitStruct);
+}
+
 void AF_GPIO_Init(GPIO_AF_Config config){
 	GPIO_InitTypeDef GPIO_InitStruct;
 	GPIO_InitStruct.Pin = config.Pin;
@@ -128,4 +163,8 @@ void AF_GPIO_Init(GPIO_AF_Config config){
 	GPIO_InitStruct.Speed = config.Speed;
 	GPIO_InitStruct.Alternate = config.Alternate;
 	HAL_GPIO_Init(config.GPIO, &GPIO_InitStruct);
+}
+
+void GPIO_Write_Pin(GPIO_TypeDef* gpio, uint32_t pins, PINSTATE value){
+	HAL_GPIO_WritePin(gpio, pins, value);
 }

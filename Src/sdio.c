@@ -20,7 +20,7 @@ void SDIO_SD_Init(){
   hsd.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;
   hsd.Init.BusWide = SDIO_BUS_WIDE_1B;
   hsd.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
-  hsd.Init.ClockDiv = 0;
+  hsd.Init.ClockDiv = 3;
   HAL_SD_Init(&hsd, &SDCardInfo);
 
   HAL_SD_WideBusOperation_Config(&hsd, SDIO_BUS_WIDE_4B);
@@ -75,28 +75,28 @@ void HAL_SD_MspInit(SD_HandleTypeDef* hsd){
 	 hdma_sdio_rx.Init.PeriphBurst = DMA_PBURST_INC4;
 	 HAL_DMA_Init(&hdma_sdio_rx);
 
-	    __HAL_LINKDMA(hsd,hdmarx,hdma_sdio_rx);
+	 __HAL_LINKDMA(hsd,hdmarx,hdma_sdio_rx);
 
-	    hdma_sdio_tx.Instance = DMA2_Stream6;
-	    hdma_sdio_tx.Init.Channel = DMA_CHANNEL_4;
-	    hdma_sdio_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
-	    hdma_sdio_tx.Init.PeriphInc = DMA_PINC_DISABLE;
-	    hdma_sdio_tx.Init.MemInc = DMA_MINC_ENABLE;
-	    hdma_sdio_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
-	    hdma_sdio_tx.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
-	    hdma_sdio_tx.Init.Mode = DMA_PFCTRL;
-	    hdma_sdio_tx.Init.Priority = DMA_PRIORITY_VERY_HIGH;
-	    hdma_sdio_tx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
-	    hdma_sdio_tx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
-	    hdma_sdio_tx.Init.MemBurst = DMA_MBURST_INC4;
-	    hdma_sdio_tx.Init.PeriphBurst = DMA_PBURST_INC4;
-	    HAL_DMA_Init(&hdma_sdio_tx);
+	 hdma_sdio_tx.Instance = DMA2_Stream6;
+	 hdma_sdio_tx.Init.Channel = DMA_CHANNEL_4;
+	 hdma_sdio_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+	 hdma_sdio_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+	 hdma_sdio_tx.Init.MemInc = DMA_MINC_ENABLE;
+	 hdma_sdio_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+	 hdma_sdio_tx.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+	 hdma_sdio_tx.Init.Mode = DMA_PFCTRL;
+	 hdma_sdio_tx.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+	 hdma_sdio_tx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+	 hdma_sdio_tx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+	 hdma_sdio_tx.Init.MemBurst = DMA_MBURST_INC4;
+	 hdma_sdio_tx.Init.PeriphBurst = DMA_PBURST_INC4;
+	 HAL_DMA_Init(&hdma_sdio_tx);
 
-	    __HAL_LINKDMA(hsd,hdmatx,hdma_sdio_tx);
+	 __HAL_LINKDMA(hsd,hdmatx,hdma_sdio_tx);
 
 	    /* Peripheral interrupt init*/
-	    HAL_NVIC_SetPriority(SDIO_IRQn, 5, 0);
-	    HAL_NVIC_EnableIRQ(SDIO_IRQn);
+	 HAL_NVIC_SetPriority(SDIO_IRQn, 5, 0);
+	 HAL_NVIC_EnableIRQ(SDIO_IRQn);
 	}
 }
 

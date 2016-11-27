@@ -1,77 +1,32 @@
 /*
- * main.h
+ * ll_fatfs.h
  *
- *  Created on: 21 nov 2016
+ *  Created on: 26 nov 2016
  *      Author: raidenfox
  */
 
+#ifndef INC_FATFS_H_
+#define INC_FATFS_H_
 
-#ifndef __fatfs_H
-#define __fatfs_H
-
-#include <string.h>
-#include <malloc.h>
 #include "ff.h"
 #include "ff_gen_drv.h"
-#include "sd_diskio.h" /* defines SD_Driver as external */
+#include "sd_diskio.h"
+#include <string.h>
+#include <malloc.h>/* defines SD_Driver as external */
 
-/* Lets define a buffer of DIM_BUFFER bytes */
-#define DIM_BUFFER 1024
+SD_HandleTypeDef hsd;
+HAL_SD_CardInfoTypedef SDCardInfo;
 
-/* Access */
-#define CREATE_NEW 		FA_CREATE_NEW
-#define CREATE_ALWAYS 	FA_CREATE_ALWAYS
+uint8_t retSD;    /* Return value for SD */
+char SD_Path[4];  /* SD logical drive path */
 
-/* Operations */
-#define RD FA_READ
-#define WR FA_WRITE
+FATFS fileSystem;
+FIL linkedFile;
 
-extern uint8_t retSD; /* Return status for SD
- 	 	 	 	 	 	 0 = OK
- 	 	 	 	 	 	 */
-extern char SD_Path[4]; /* SD logical drive path */
+void FATFS_Init();
+void FATFS_LinkFile(const char* filename, uint8_t mode);
+void FATFS_UnlinkFile();
+void FATFS_fread();
+uint8_t FATFS_fgets();
 
-/* File system Work Area for the mounted Logical Drive */
-FATFS FatFs;
-
-/* File handler to perform R/W ops */
-FIL file_handler;
-
-typedef struct{
-	FRESULT mountStatus;
-	FRESULT openStatus;
-	FRESULT createStatus;
-	FRESULT writeStatus;
-	FRESULT readStatus;
-	FRESULT closeStatus;
-}ResultInfo;
-
-ResultInfo status;
-
-void FATFS_Init(void);
-char* FATFS_GetLabel();
-char* FATFS_GetLogicalPath();
-
-/* Read a string from file
- * path: The Volume id (0: or others)
- * namefile: File Name and it's extension
- * buffer_rx: A buffer for the management of the result
- * size: size read
- */
-FRESULT FATFS_CharReadFromFile(char* path, char* namefile, char* buffer_rx,int* size);
-
-/* Read a sequence of byte from file
- * path: The Volume id (0: or others)
- * namefile: File Name and it's extension
- * buffer_rx: A 8-bit buffer for the management of the result
- * size: size read
- */
-FRESULT FATFS_ByteReadFromFile(char* path, char* namefile, uint8_t* buffer_rx,int* size);
-
-/* Read a string from file
- * path: The Volume id (0: or others)
- * namefile: File Name and it's extension
- * buffer_tx: A buffer for the transmitted data
- */
-FRESULT FATFS_CharWriteToFile(char* path, char* namefile, char* buffer_tx);
-#endif
+#endif /* INC_FATFS_H_ */
