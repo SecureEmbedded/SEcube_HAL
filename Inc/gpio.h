@@ -84,5 +84,7 @@ void GPIO_Init(GPIO_SimpleConfig config);
 void AF_GPIO_Init(GPIO_AF_Config);
 
 void GPIO_Write_Pin(GPIO_TypeDef* gpio, uint32_t pins, PINSTATE value);
+PINSTATE GPIO_Read_Pin(GPIO_TypeDef* gpio, uint32_t pins);
+void GPIO_Write_Multiple_Pins(GPIO_TypeDef* gpio,uint8_t size, uint32_t pins[],PINSTATE value[]);
 
 #endif /*__ pinoutConfig_H */

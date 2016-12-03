@@ -6,40 +6,50 @@
  */
 
 #include "flash.h"
+#include "fatfs.h"
 
-void Flash_Init(){
+void Flash_Init(uint32_t address){
+	Address = address;
 	/* Unlock the Flash to enable the flash control register access *************/
 	HAL_FLASH_Unlock();
 }
 
-void ProgramData(uint32_t* data, uint32_t size){
+void ProgramData(uint32_t address,const char* namefile,uint32_t* siz){
 
-	/* Erase the Flash Memory */
-	EraseFlash();
+	Flash_Init(address);
 
 	/* Program All the Data */
-	uint32_t count = 0;
-	while(count < size){
-		ProgramFlash(*data);
-		__IO uint32_t status = VerifyData(*data);
-		data++;
-		count++;
-	}
+	FIL opened;
+	FRESULT status;
+	FATFS_fopen(&opened,namefile,&status,FA_READ);
+	uint32_t size = FATFS_GetSize(opened);
+	*siz = size;
+	/* Erase the Flash Memory */
+	EraseFlash(size);
 
-	HAL_FLASH_Lock();
-
+	for(int i = 0; i< size; i++){
+		uint8_t c = FATFS_fgetc(&opened);
+		ProgramFlashByte(c);
+	  }
+	Address = address;
+	FATFS_fclose(&opened);
+	Flash_Lock();
 }
 
-void EraseFlash(){
+void Flash_Lock(){
+	HAL_FLASH_Lock();
+}
+
+void EraseFlash(uint32_t size){
 	/* Erase the user Flash area
 	(area defined by FLASH_USER_START_ADDR and FLASH_USER_END_ADDR) ***********/
 
 	/* Get the 1st sector to erase */
-	FirstSector = GetSector(FLASH_USER_START_ADDR);
+	FirstSector = GetSector(Address);
 
 	/* Get the number of sector to erase from 1st sector*/
-
-	NbOfSectors = GetSector(FLASH_USER_END_ADDR) - FirstSector + 1;
+	EndAddress = Address + size;
+	NbOfSectors = GetSector(EndAddress) - FirstSector + 1;
 
 
 	/* Fill EraseInit structure*/
@@ -61,47 +71,55 @@ void EraseFlash(){
 	  }
 }
 
-void ProgramFlash(uint32_t data){
-	/* Program the user Flash area word by word
-	    (area defined by FLASH_USER_START_ADDR and FLASH_USER_END_ADDR) ***********/
+void ProgramFlashByte(uint8_t buffer){
+	  EndAddress = Address + 1;
+	  int i = 0;
+	  while (Address < EndAddress){
+	  	  {
+	  	    if (HAL_FLASH_Program(TYPEPROGRAM_BYTE, Address, buffer) == HAL_OK)
+	  	    {
+	  	      Address = Address + 1;
+	  	    }
+	  	    else
+	  	    {
+	  	      /* Error occurred while writing data in Flash memory.
+	  	         User can add here some code to deal with this error */
 
-	  Address = FLASH_USER_START_ADDR;
-
-	  while (Address < FLASH_USER_END_ADDR)
-	  {
-	    if (HAL_FLASH_Program(TYPEPROGRAM_WORD, Address, data) == HAL_OK)
-	    {
-	      Address = Address + 4;
-	    }
-	    else
-	    {
-	      /* Error occurred while writing data in Flash memory.
-	         User can add here some code to deal with this error */
-
-	    	uint32_t errorcode = HAL_FLASH_GetError();
-	    }
+	  	    	uint32_t errorcode = HAL_FLASH_GetError();
+	  	    }
+	  	  }
+	  	  i++;
 	  }
+
 }
 
-__IO uint32_t VerifyData(uint32_t data){
+uint8_t ReadFlash(){
+	data8 = *(__IO uint8_t*)Address;
+	Address = Address + 1;
+	return data8;
+}
+
+/*
+
+__IO uint32_t VerifyData(uint8_t data){
 	Address = FLASH_USER_START_ADDR;
 	  MemoryProgramStatus = 0x0;
 
 	  while (Address < FLASH_USER_END_ADDR)
 	  {
-	    data32 = *(__IO uint32_t*)Address;
+	    data8 = *(__IO uint8_t*)Address;
 
-	    if (data32 != data)
+	    if (data8 != data)
 	    {
 	      MemoryProgramStatus++;
 	      return MemoryProgramStatus;
 	    }
 
-	    Address = Address + 4;
+	    Address = Address + 1;
 	  }
 	  return MemoryProgramStatus;
 }
-
+*/
 static uint32_t GetSector(uint32_t Address)
 {
   uint32_t sector = 0;

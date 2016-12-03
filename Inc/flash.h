@@ -9,7 +9,6 @@
 #define INC_FLASH_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f429xx.h"
 #include "stm32f4xx_hal.h"
 
 /* Exported types ------------------------------------------------------------*/
@@ -43,22 +42,27 @@
 #define ADDR_FLASH_SECTOR_22     ((uint32_t)0x081C0000) /* Base @ of Sector 10, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_23     ((uint32_t)0x081E0000) /* Base @ of Sector 11, 128 Kbytes */
 
-#define FLASH_USER_START_ADDR   ADDR_FLASH_SECTOR_2   /* Start @ of user Flash area */
-#define FLASH_USER_END_ADDR     ADDR_FLASH_SECTOR_5   /* End @ of user Flash area */
+#define FLASH_DATA_ADDR   ADDR_FLASH_SECTOR_5   /* Start @ of user Flash area */
+#define FLASH_ALGO_ADDR   ADDR_FLASH_SECTOR_17   /* Start @ of user Flash area */
+//#define FLASH_USER_END_ADDR     ADDR_FLASH_SECTOR_7   /* End @ of user Flash area */
 
 /*Variable used for Erase procedure*/
 static FLASH_EraseInitTypeDef EraseInitStruct;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t FirstSector = 0, NbOfSectors = 0, Address = 0;
+uint8_t ByteAddress = 0;
+uint32_t FirstSector = 0, NbOfSectors = 0, Address = FLASH_DATA_ADDR;
+uint32_t EndAddress;
 uint32_t SectorError = 0;
-__IO uint32_t data32 = 0 , MemoryProgramStatus = 0;
+__IO uint8_t data8 = 0 , MemoryProgramStatus = 0;
 
 void Flash_Init();
-void EraseFlash();
-void ProgramData(uint32_t* data, uint32_t size);
-void ProgramFlash(uint32_t);
-__IO uint32_t VerifyData(uint32_t data);
+void Flash_Lock();
+void EraseFlash(uint32_t size);
+void ProgramData(uint32_t address,const char* namefile,uint32_t* siz);
+void ProgramFlashByte(uint8_t buffer);
+uint8_t ReadFlash();
+__IO uint32_t VerifyData(uint8_t data);
 static uint32_t GetSector(uint32_t Address);
 
 #endif /* INC_FLASH_H_ */

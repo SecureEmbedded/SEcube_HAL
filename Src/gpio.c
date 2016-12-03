@@ -78,18 +78,18 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PEPin PEPin PEPin PEPin 
                            PEPin PEPin */
-  GPIO_InitStruct.Pin = FPGA_TCK_Pin|FPGA_TDO_Pin|SC_ON_OFF_Pin|SC_RST_Pin 
-                          |FPGA_TMS_Pin|FPGA_PROGRAMN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+  /*Configure GPIO pin : PE2 */
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PtPin */
-  GPIO_InitStruct.Pin = FPGA_TDI_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(FPGA_TDI_GPIO_Port, &GPIO_InitStruct);
+    /*Configure GPIO pins : PE3 PE4 PE5 PE6 */
+    GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = FPGA_INTN_Pin;
@@ -167,4 +167,14 @@ void AF_GPIO_Init(GPIO_AF_Config config){
 
 void GPIO_Write_Pin(GPIO_TypeDef* gpio, uint32_t pins, PINSTATE value){
 	HAL_GPIO_WritePin(gpio, pins, value);
+}
+
+PINSTATE GPIO_Read_Pin(GPIO_TypeDef* gpio, uint32_t pins){
+	return HAL_GPIO_ReadPin(gpio, pins);
+}
+
+void GPIO_Write_Multiple_Pins(GPIO_TypeDef* gpio,uint8_t size, uint32_t pins[],PINSTATE value[]){
+	for(int i = 0; i < size; i++){
+		GPIO_Write_Pin(gpio,pins[i],value[i]);
+	}
 }
