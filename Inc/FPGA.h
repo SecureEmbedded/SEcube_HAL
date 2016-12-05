@@ -6,7 +6,10 @@
 #ifndef APPLICATION_SRC_FPGA_H_
 #define APPLICATION_SRC_FPGA_H_
 
-#include "fatfs.h"
+#include "flashmem.h"
+
+#define FLASH_DATA_ADDR   ADDR_FLASH_SECTOR_5   /* Start @ of user Flash area */
+#define FLASH_ALGO_ADDR   ADDR_FLASH_SECTOR_17   /* Start @ of user Flash area */
 
 int32_t     B5_FPGA_Programming (const char*,const char*);
 void        B5_FPGA_SetMux (uint8_t mux);

@@ -5,8 +5,18 @@
  *      Author: raidenfox
  */
 
-#include "flash.h"
+#include "flashmem.h"
 #include "fatfs.h"
+
+/*Variable used for Erase procedure*/
+static FLASH_EraseInitTypeDef EraseInitStruct;
+
+/* Private variables ---------------------------------------------------------*/
+uint8_t ByteAddress = 0;
+uint32_t FirstSector = 0, NbOfSectors = 0, Address = 0;
+uint32_t EndAddress;
+uint32_t SectorError = 0;
+__IO uint8_t data8 = 0 , MemoryProgramStatus = 0;
 
 void Flash_Init(uint32_t address){
 	Address = address;
@@ -90,9 +100,8 @@ void ProgramFlashByte(uint8_t buffer){
 
 }
 
-uint8_t ReadFlash(){
-	data8 = *(__IO uint8_t*)Address;
-	Address = Address + 1;
+uint8_t ReadFlash(uint32_t addr){
+	data8 = *(__IO uint8_t*)addr;
 	return data8;
 }
 

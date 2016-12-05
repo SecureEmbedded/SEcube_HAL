@@ -3,11 +3,8 @@
 #include "stm32f4xx.h"
 #include "FPGA.h"
 
-extern void Flash_Init();
-extern void Flash_Lock();
-extern void ProgramData(uint32_t address,const char* namefile,uint32_t* siz);
-uint8_t* __fpga_data = (uint8_t*)0x08020000;
-uint8_t* __fpga_alg = (uint8_t*)0x08120000;
+uint8_t* __fpga_data = (uint8_t*)FLASH_DATA_ADDR;
+uint8_t* __fpga_alg = (uint8_t*)FLASH_ALGO_ADDR;
 uint32_t g_iAlgoSize;
 uint32_t g_iDataSize;
 
@@ -1570,10 +1567,10 @@ char *g_szSupportedVersions[] = { (char *) "_SVME1.1", (char *) "_SVME1.2", (cha
 
 int32_t B5_FPGA_Programming(const char* nameAlgo, const char* nameData)
 {
-	Flash_Init((uint32_t)0x08020000);
-	ProgramData((uint32_t)0x08020000,nameData,&g_iDataSize);
-	Flash_Init((uint32_t)0x08120000);
-	ProgramData((uint32_t)0x08120000,nameAlgo,&g_iAlgoSize);
+	Flash_Init(FLASH_DATA_ADDR);
+	ProgramData(FLASH_DATA_ADDR,nameData,&g_iDataSize);
+	Flash_Init(FLASH_ALGO_ADDR);
+	ProgramData(FLASH_ALGO_ADDR,nameAlgo,&g_iAlgoSize);
 	char szFileVersion[ 9 ] = { 0 };
 	int16_t siRetCode     = 0;
 	int16_t iIndex        = 0;
