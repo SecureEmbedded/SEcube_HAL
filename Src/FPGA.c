@@ -1570,10 +1570,10 @@ char *g_szSupportedVersions[] = { (char *) "_SVME1.1", (char *) "_SVME1.2", (cha
 
 int32_t B5_FPGA_Programming(const char* nameAlgo, const char* nameData)
 {
-	ProgramData((uint32_t)0x08020000,nameData,&g_iDataSize);
-	ProgramData((uint32_t)0x08120000,nameAlgo,&g_iAlgoSize);
 	Flash_Init((uint32_t)0x08020000);
+	ProgramData((uint32_t)0x08020000,nameData,&g_iDataSize);
 	Flash_Init((uint32_t)0x08120000);
+	ProgramData((uint32_t)0x08120000,nameAlgo,&g_iAlgoSize);
 	char szFileVersion[ 9 ] = { 0 };
 	int16_t siRetCode     = 0;
 	int16_t iIndex        = 0;

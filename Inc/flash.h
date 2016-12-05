@@ -9,6 +9,7 @@
 #define INC_FLASH_H_
 
 /* Includes ------------------------------------------------------------------*/
+#include "se3_flash.h"
 #include "stm32f4xx_hal.h"
 
 /* Exported types ------------------------------------------------------------*/
@@ -51,7 +52,7 @@ static FLASH_EraseInitTypeDef EraseInitStruct;
 
 /* Private variables ---------------------------------------------------------*/
 uint8_t ByteAddress = 0;
-uint32_t FirstSector = 0, NbOfSectors = 0, Address = FLASH_DATA_ADDR;
+uint32_t FirstSector = 0, NbOfSectors = 0, Address = 0;
 uint32_t EndAddress;
 uint32_t SectorError = 0;
 __IO uint8_t data8 = 0 , MemoryProgramStatus = 0;
@@ -64,5 +65,6 @@ void ProgramFlashByte(uint8_t buffer);
 uint8_t ReadFlash();
 __IO uint32_t VerifyData(uint8_t data);
 static uint32_t GetSector(uint32_t Address);
+
 
 #endif /* INC_FLASH_H_ */

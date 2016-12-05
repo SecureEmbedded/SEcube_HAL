@@ -15,9 +15,6 @@ void Flash_Init(uint32_t address){
 }
 
 void ProgramData(uint32_t address,const char* namefile,uint32_t* siz){
-
-	Flash_Init(address);
-
 	/* Program All the Data */
 	FIL opened;
 	FRESULT status;
@@ -33,7 +30,7 @@ void ProgramData(uint32_t address,const char* namefile,uint32_t* siz){
 	  }
 	Address = address;
 	FATFS_fclose(&opened);
-	Flash_Lock();
+	HAL_FLASH_Lock();
 }
 
 void Flash_Lock(){
@@ -65,7 +62,7 @@ void EraseFlash(uint32_t size){
 	      SectorError will contain the faulty sector and then to know the code error on this sector,
 	      user can call function 'HAL_FLASH_GetError()'
 	    */
-	        uint32_t errorcode = HAL_FLASH_GetError();
+	        HAL_FLASH_GetError();
 
 
 	  }
@@ -85,7 +82,7 @@ void ProgramFlashByte(uint8_t buffer){
 	  	      /* Error occurred while writing data in Flash memory.
 	  	         User can add here some code to deal with this error */
 
-	  	    	uint32_t errorcode = HAL_FLASH_GetError();
+	  	    	HAL_FLASH_GetError();
 	  	    }
 	  	  }
 	  	  i++;
