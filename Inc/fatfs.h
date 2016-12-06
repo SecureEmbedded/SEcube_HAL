@@ -1,9 +1,19 @@
-/*
- * ll_fatfs.h
- *
- *  Created on: 26 nov 2016
- *      Author: raidenfox
- */
+/**
+ ******************************************************************************
+  * @file    fatfs.h
+  * @brief   This file describes the primitives adopted to read/write on the uSD
+  ******************************************************************************
+  * @attention
+  *
+  * HOW TO USE THIS DRIVER
+  *
+  * Initializate the FATFS_Init function to link the FATFS Driver in the app.
+  * Then use the FATFS_fopen primitive to open a file and get his handle. Obtained
+  * the handle you can use the primitive FATFS_fgetc to read byte by byte or
+  * FATFS_fclose to close the file previously opened.
+  *
+  ******************************************************************************
+  */
 
 #ifndef INC_FATFS_H_
 #define INC_FATFS_H_
@@ -30,20 +40,37 @@ FATFS fileSystem;
 FIL linkedFile;
 FIL debugFile;
 
+/**
+  * @brief  Initializes the driver to work with the uSD
+  */
 void FATFS_Init();
-void FATFS_LinkFile(const char* filename, uint8_t mode);
 void FATFS_UnlinkFile();
 void FATFS_fread();
 uint8_t FATFS_fgets();
+/**
+ * @brief  Get the size of the file in bytes
+ * @param  file: Handler obtained with the FATFS_Init function
+ */
 uint32_t FATFS_GetSize(FIL file);
-FIL FATFS_fopen(FIL*,const char*filename, FRESULT*, uint8_t);
+/**
+ * @brief  Get the handle of the file to open
+ * @param  file: Handler to obtain with the FATFS_Init function, passed as reference
+ * @param  filename: Name of the file to open from uSD card
+ * @param  state: state of the operation
+ * @param  mode: open mode (FA_READ, FA_WRITE)
+ */
+FIL FATFS_fopen(FIL* file,const char*filename, FRESULT* state, uint8_t mode);
+/**
+ * @brief  Get the actual byte to read
+ * @param  linked: Handler to obtain with the FATFS_Init function, passed as reference
+ * @retval the byte read at the actual reading pointer
+ */
 uint8_t FATFS_fgetc(FIL* linked);
-uint8_t FATFS_feof(FIL* linked);
-void FATFS_fclose(FIL* linked);
-void FATFS_Debug();
-void debug(char c);
-void FATFS_Abort_Debug();
-void FATFS_BlockReading(FIL* file, uint8_t* buffer,uint32_t counter,uint32_t* refreshed_blocks);
+/**
+ * @brief  Close the file and destroy the handler
+ * @param  file: Handler to obtain with the FATFS_Init function, passed as reference
+ */
+void FATFS_fclose(FIL* file);
 
 
 #endif /* INC_FATFS_H_ */

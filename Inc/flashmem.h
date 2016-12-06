@@ -1,9 +1,19 @@
-/*
- * flash.h
- *
- *  Created on: 26 nov 2016
- *      Author: raidenfox
- */
+/**
+ ******************************************************************************
+  * @file    flashmem.h
+  * @brief   This file describes the primitives adopted to write on a flash
+  ******************************************************************************
+  * @attention
+  *
+  * HOW TO USE THIS DRIVER
+  *
+  * Initializate the Flash_Init function, passing the first address of the area
+  * to write. Then use the ProgramData primitive, passing the namefile to write
+  * on the flash, before close the opeartions on the Flash with the Lock HAL
+  * primitive
+  *
+  ******************************************************************************
+  */
 
 #ifndef INC_FLASH_H_
 #define INC_FLASH_H_
@@ -45,12 +55,47 @@
 
 //#define FLASH_USER_END_ADDR     ADDR_FLASH_SECTOR_7   /* End @ of user Flash area */
 
-
+/**
+  * @brief  Configures First Algo-Data Address for the Flash Area.
+  * @param  None
+  * @retval None
+  */
 void Flash_Init();
+
+
+/**
+  * @brief  Lock the Flash.
+  * @param  None
+  * @retval None
+  */
 void Flash_Lock();
+
+
+/**
+  * @brief  Erase the areas in the Flash.
+  * @param  size: Numbers of areas to erase
+  * @retval None
+  */
 void EraseFlash(uint32_t size);
+
+/**
+  * @brief  Configures First Algo-Data Address for the Flash Area.
+  * @param  address: First address to start write the data passed as 2nd parameter
+  * @param  namefile: Name of the file to read from uSD card
+  * @param  siz: pointer to return the number of written data
+  * @retval None
+  */
 void ProgramData(uint32_t address,const char* namefile,uint32_t* siz);
+
+
 void ProgramFlashByte(uint8_t buffer);
+
+
+/**
+  * @brief  Configures First Algo-Data Address for the Flash Area.
+  * @param  addr: read a byte from a passed address
+  * @retval byte read
+  */
 uint8_t ReadFlash(uint32_t addr);
 __IO uint32_t VerifyData(uint8_t data);
 static uint32_t GetSector(uint32_t Address);
